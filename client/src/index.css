@@ -234,3 +234,59 @@ body {
   border-radius: 12px;
   grid-column: 1 / -1;
 }
+
+/* Spinners */
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Badges */
+.file-badge {
+  display: inline-block;
+  background-color: #e5e7eb;
+  color: #4b5563;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-left: 0.5rem;
+  text-transform: uppercase;
+  border: 1px solid #d1d5db;
+}
+
+/* Buttons */
+.btn-danger {
+  background-color: #ef4444;
+  margin-top: 1rem;
+}
+
+.btn-danger:hover {
+  background-color: #dc2626;
+}
+
+.card-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Section Headings */
+.section-heading {
+  margin-bottom: 1.5rem;
+  color: var(--text-main);
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.section-divider {
+  margin-top: 2rem;
+  margin-bottom: 1.5rem;
+  border-top: 1px solid var(--border-color);
+  padding-top: 2rem;
+}

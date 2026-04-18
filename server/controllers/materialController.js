@@ -86,3 +86,36 @@ exports.downloadMaterial = async (req, res) => {
     res.status(500).json({ message: 'Server Error' });
   }
 };
+
+// @desc    Delete material
+// @route   DELETE /api/materials/:id
+exports.deleteMaterial = async (req, res) => {
+  try {
+    console.log(`DELETE request received for ID: ${req.params.id}`);
+    const material = await Material.findById(req.params.id);
+
+    if (!material) {
+      console.log('Material not found in database');
+      return res.status(404).json({ message: 'Material not found' });
+    }
+
+    const filePath = path.resolve(material.filePath);
+    console.log(`Attempting to delete file at path: ${filePath}`);
+
+    // Delete file from filesystem if it exists
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+      console.log('File successfully deleted from filesystem');
+    } else {
+      console.log('File not found on filesystem, skipping file deletion');
+    }
+
+    await Material.findByIdAndDelete(req.params.id);
+    console.log('Material document successfully deleted from MongoDB');
+
+    res.status(200).json({ message: 'Material deleted successfully' });
+  } catch (error) {
+    console.error('Error in deleteMaterial:', error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+};

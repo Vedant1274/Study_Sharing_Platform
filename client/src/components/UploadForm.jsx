@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Upload, FileType, BookOpen, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Upload, FileType, BookOpen, AlertCircle, CheckCircle2, Loader } from 'lucide-react';
 
 const UploadForm = ({ onUploadSuccess }) => {
   const [title, setTitle] = useState('');
@@ -12,6 +12,19 @@ const UploadForm = ({ onUploadSuccess }) => {
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
+      // Client-side validation for unsupported file types
+      const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation'];
+      
+      const fileName = selectedFile.name.toLowerCase();
+      const isValidExtension = fileName.endsWith('.pdf') || fileName.endsWith('.doc') || fileName.endsWith('.docx') || fileName.endsWith('.ppt') || fileName.endsWith('.pptx');
+
+      if (!isValidExtension) {
+        setMessage({ type: 'error', text: 'Unsupported file type. Please upload PDF, DOC, or PPT.' });
+        setFile(null);
+        e.target.value = null; // reset input
+        return;
+      }
+
       // Client-side validation for 10MB limit
       if (selectedFile.size > 10 * 1024 * 1024) {
         setMessage({ type: 'error', text: 'File size exceeds 10MB limit.' });
@@ -53,6 +66,11 @@ const UploadForm = ({ onUploadSuccess }) => {
       
       // Reset file input element manually
       document.getElementById('file-upload').value = '';
+
+      // Auto-hide success message after 3 seconds
+      setTimeout(() => {
+        setMessage({ type: '', text: '' });
+      }, 3000);
 
       if (onUploadSuccess) {
         onUploadSuccess(res.data);
@@ -125,7 +143,14 @@ const UploadForm = ({ onUploadSuccess }) => {
         </div>
 
         <button type="submit" className="btn" disabled={loading}>
-          {loading ? 'Uploading...' : 'Upload Material'}
+          {loading ? (
+            <>
+              <Loader className="spinner" size={18} />
+              Uploading...
+            </>
+          ) : (
+            'Upload Material'
+          )}
         </button>
       </form>
     </div>
